@@ -67,15 +67,15 @@ type Commenter struct {
 }
 
 var (
-	noComments = Commenter{"\000", "\000", "\000", false}
-	xmlComments = Commenter{"\000", `<!--`, `-->`, false}
-	cComments  = Commenter{`//`, `/*`, `*/`, false}
+	noComments   = Commenter{"\000", "\000", "\000", false}
+	xmlComments  = Commenter{"\000", `<!--`, `-->`, false}
+	cComments    = Commenter{`//`, `/*`, `*/`, false}
 	cssComments  = Commenter{"\000", `/*`, `*/`, false}
-	shComments = Commenter{`#`, "\000", "\000", false}
+	shComments   = Commenter{`#`, "\000", "\000", false}
 	semiComments = Commenter{`;`, "\000", "\000", false}
-	hsComments  = Commenter{`--`, `{-`, `-}`, true}
+	hsComments   = Commenter{`--`, `{-`, `-}`, true}
 	sqlComments  = Commenter{`--`, "\000", "\000", false}
-	pyComments = Commenter{`#`, `"""`, `"""`, false}
+	pyComments   = Commenter{`#`, `"""`, `"""`, false}
 )
 
 type Language struct {
@@ -103,7 +103,9 @@ func (l Language) Update(c []byte, s *Stats) {
 				inLComment = true
 				lp = 0
 			}
-		} else { lp = 0 }
+		} else {
+			lp = 0
+		}
 		if !inLComment && b == sc[sp] {
 			sp++
 			if sp == len(sc) {
@@ -113,14 +115,20 @@ func (l Language) Update(c []byte, s *Stats) {
 				}
 				sp = 0
 			}
-		} else { sp = 0 }
+		} else {
+			sp = 0
+		}
 		if !inLComment && inComment > 0 && b == ec[ep] {
 			ep++
 			if ep == len(ec) {
-				if inComment > 0 { inComment-- }
+				if inComment > 0 {
+					inComment--
+				}
 				ep = 0
 			}
-		} else { ep = 0 }
+		} else {
+			ep = 0
+		}
 
 		if b != byte(' ') && b != byte('\t') && b != byte('\n') && b != byte('\r') {
 			blank = false
@@ -136,7 +144,9 @@ func (l Language) Update(c []byte, s *Stats) {
 				s.CommentLines++
 			} else if blank {
 				s.BlankLines++
-			} else { s.CodeLines++ }
+			} else {
+				s.CodeLines++
+			}
 			blank = true
 			continue
 		}
@@ -217,6 +227,10 @@ func add(n string) {
 		goto invalid
 	}
 	if fi.IsDir() {
+		if fi.Name() == "vendor" {
+			return
+		}
+
 		fs, err := ioutil.ReadDir(n)
 		if err != nil {
 			goto invalid
@@ -255,12 +269,12 @@ func (d LData) Swap(i, j int) {
 }
 
 type LResult struct {
-	Name string
-	FileCount int
-	CodeLines int
+	Name         string
+	FileCount    int
+	CodeLines    int
 	CommentLines int
-	BlankLines int
-	TotalLines int
+	BlankLines   int
+	TotalLines   int
 }
 
 func (r *LResult) Add(a LResult) {
@@ -273,7 +287,9 @@ func (r *LResult) Add(a LResult) {
 
 func printJSON() {
 	bs, err := json.MarshalIndent(info, "", "  ")
-	if err != nil { panic(err) }
+	if err != nil {
+		panic(err)
+	}
 	fmt.Println(string(bs))
 }
 
@@ -315,8 +331,9 @@ func printInfo() {
 
 var (
 	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
-	useJson = flag.Bool("json", false, "JSON-format output")
-	version = flag.Bool("V", false, "display version info and exit")
+	useJson    = flag.Bool("json", false, "JSON-format output")
+	version    = flag.Bool("V", false, "display version info and exit")
+	skipVendor = flag.Bool("novendor", true, "skip any directories named vendor")
 )
 
 func main() {
