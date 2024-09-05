@@ -50,6 +50,7 @@ var languages = []Language{
 	{"HAML", mExt(".haml"), noComments},
 	{"SASS", mExt(".sass"), cssComments},
 	{"SCSS", mExt(".scss"), cssComments},
+	{"Templ", mExt(".templ"), cComments},
 
 	{"HTML", mExt(".htm", ".html", ".xhtml"), xmlComments},
 	{"XML", mExt(".xml"), xmlComments},
