@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 	"runtime/pprof"
@@ -15,48 +14,48 @@ import (
 const VERSION = `0.1.1`
 
 var languages = []Language{
-	Language{"Thrift", mExt(".thrift"), cComments},
+	{"Thrift", mExt(".thrift"), cComments},
 
-	Language{"C", mExt(".c", ".h"), cComments},
-	Language{"C++", mExt(".cc", ".cpp", ".cxx", ".hh", ".hpp", ".hxx"), cComments},
-	Language{"Go", mExt(".go"), cComments},
-	Language{"Scala", mExt(".scala"), cComments},
-	Language{"Java", mExt(".java"), cComments},
+	{"C", mExt(".c", ".h"), cComments},
+	{"C++", mExt(".cc", ".cpp", ".cxx", ".hh", ".hpp", ".hxx"), cComments},
+	{"Go", mExt(".go"), cComments},
+	{"Scala", mExt(".scala"), cComments},
+	{"Java", mExt(".java"), cComments},
 
-	Language{"YACC", mExt(".y"), cComments},
-	Language{"Lex", mExt(".l"), cComments},
+	{"YACC", mExt(".y"), cComments},
+	{"Lex", mExt(".l"), cComments},
 
-	Language{"SQL", mExt(".sql"), sqlComments},
+	{"SQL", mExt(".sql"), sqlComments},
 
-	Language{"Haskell", mExt(".hs", ".lhs"), hsComments},
+	{"Haskell", mExt(".hs", ".lhs"), hsComments},
 
-	Language{"Perl", mExt(".pl", ".pm"), shComments},
-	Language{"PHP", mExt(".php"), cComments},
+	{"Perl", mExt(".pl", ".pm"), shComments},
+	{"PHP", mExt(".php"), cComments},
 
-	Language{"Shell", mExt(".sh"), shComments},
-	Language{"Bash", mExt(".bash"), shComments},
+	{"Shell", mExt(".sh"), shComments},
+	{"Bash", mExt(".bash"), shComments},
 
-	Language{"Ruby", mExt(".rb"), shComments},
-	Language{"Python", mExt(".py"), pyComments},
-	Language{"Assembly", mExt(".asm", ".s"), semiComments},
-	Language{"Lisp", mExt(".lsp", ".lisp"), semiComments},
-	Language{"Scheme", mExt(".scm", ".scheme"), semiComments},
+	{"Ruby", mExt(".rb"), shComments},
+	{"Python", mExt(".py"), pyComments},
+	{"Assembly", mExt(".asm", ".s"), semiComments},
+	{"Lisp", mExt(".lsp", ".lisp"), semiComments},
+	{"Scheme", mExt(".scm", ".scheme"), semiComments},
 
-	Language{"Make", mName("makefile", "Makefile", "MAKEFILE"), shComments},
-	Language{"CMake", mName("CMakeLists.txt"), shComments},
-	Language{"Jam", mName("Jamfile", "Jamrules"), shComments},
+	{"Make", mName("makefile", "Makefile", "MAKEFILE"), shComments},
+	{"CMake", mName("CMakeLists.txt"), shComments},
+	{"Jam", mName("Jamfile", "Jamrules"), shComments},
 
-	Language{"Markdown", mExt(".md"), noComments},
+	{"Markdown", mExt(".md"), noComments},
 
-	Language{"HAML", mExt(".haml"), noComments},
-	Language{"SASS", mExt(".sass"), cssComments},
-	Language{"SCSS", mExt(".scss"), cssComments},
+	{"HAML", mExt(".haml"), noComments},
+	{"SASS", mExt(".sass"), cssComments},
+	{"SCSS", mExt(".scss"), cssComments},
 
-	Language{"HTML", mExt(".htm", ".html", ".xhtml"), xmlComments},
-	Language{"XML", mExt(".xml"), xmlComments},
-	Language{"CSS", mExt(".css"), cssComments},
-	Language{"JavaScript", mExt(".js"), cComments},
-	Language{"JSON", mExt(".json"), noComments},
+	{"HTML", mExt(".htm", ".html", ".xhtml"), xmlComments},
+	{"XML", mExt(".xml"), xmlComments},
+	{"CSS", mExt(".css"), cssComments},
+	{"JavaScript", mExt(".js"), cComments},
+	{"JSON", mExt(".json"), noComments},
 }
 
 type Commenter struct {
@@ -211,7 +210,7 @@ func handleFile(fname string) {
 		i = &Stats{}
 		info[l.Name()] = i
 	}
-	c, err := ioutil.ReadFile(fname)
+	c, err := os.ReadFile(fname)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "  ! %s\n", fname)
 		return
@@ -231,7 +230,7 @@ func add(n string) {
 			return
 		}
 
-		fs, err := ioutil.ReadDir(n)
+		fs, err := os.ReadDir(n)
 		if err != nil {
 			goto invalid
 		}
