@@ -333,7 +333,6 @@ var (
 	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
 	useJson    = flag.Bool("json", false, "JSON-format output")
 	version    = flag.Bool("V", false, "display version info and exit")
-	skipVendor = flag.Bool("novendor", true, "skip any directories named vendor")
 )
 
 func main() {
